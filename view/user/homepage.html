@@ -1,0 +1,386 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="../../css/mdb.min.css" rel="stylesheet">
+
+    <link href="../../css/style.css" rel="stylesheet">
+    <style type="text/css">
+        html,
+        body,
+        header,
+        .carousel {
+            height: 60vh;
+        }
+
+        @media (max-width: 740px) {
+
+            html,
+            body,
+            header,
+            .carousel {
+                height: 100vh;
+            }
+        }
+
+        @media (min-width: 800px) and (max-width: 850px) {
+
+            html,
+            body,
+            header,
+            .carousel {
+                height: 100vh;
+            }
+        }
+
+        @media (min-width: 800px) and (max-width: 850px) {
+            .navbar:not(.top-nav-collapse) {
+                background: #929FBA !important;
+            }
+        }
+    </style>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var tok = localStorage.getItem('token');
+
+            /// Dashboard Creation
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:8080/users',
+                beforeSend: function (xhr) {
+                    if (tok) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + tok);
+                    }
+                },
+                success: function (data) {
+                    $('#stage').append('<p>' + data.fullname + '</p>');
+                },
+                error: function () {
+                    alert("Sorry, please login your id.");
+                    location.href = "../../index.html";
+
+                }
+            });
+
+            // For Logging Out
+
+            $("#logout").click(function () {
+                $.ajax({
+                    type: 'post',
+                    url: 'http://localhost:8080/users/logout',
+                    beforeSend: function (xhr) {
+                        if (tok) {
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + tok);
+                        }
+                    },
+                    success: function (data) {
+                        alert("You are logged out.");
+                        location.href = "../../index.html";
+                    },
+                    error: function () {
+                        alert("Sorry,not logged in !.");
+                        location.href = "../../index.html";
+                    }
+                });
+            })
+			
+            // Logout End
+
+            //View Hostel SCript
+			
+            $.getJSON('http://localhost:8080/viewhostel', function (res) {
+
+                $.each(res, function (index) {
+                    $('#view_hostels').append(
+                        '<div class="col-lg-3 col-md-6 mb-4">' +
+                        '<a href="hosteldetail.html?' + res[index]._id + '">'+
+                        '<div class="card "  style="box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.2), 0 13px 24px -11px rgba(156, 39, 176, 0.6);">' +
+
+                        '<div class="view overlay"><img src="http://localhost:8080/images/' + res[index].image + '" class="card-img-top card-image" alt=""></div>' +
+
+                        '<div class="card-body text-center">' +
+
+                        '<a href="#" class="grey-text"><h5>' + res[index].hosteltype + '</h5></a>' +
+
+                        '<h5><strong><a href="" class="dark-grey-text">' + res[index].hostelname + '</a></strong></h5>' +
+
+                        '<div class="hostel-footer p-2"> <span class="float-left font-weight-bold"> <strong>' + res[index].address + '</strong></span></div>' +
+                        '</div>' +
+
+                        '</div>' +
+                    '</a>'+
+
+                        '</div>'
+
+                    );
+
+                });
+
+            });
+            //View Hostel SCriptend
+
+            //View Boys Hostel SCript
+            $.getJSON('http://localhost:8080/getboys', function (res) {
+
+                $.each(res, function (index) {
+                    $('#boys_hostel').append(
+
+                        '<div class="col-lg-3 col-md-6 mb-4">' +
+                        '<a href="hosteldetail.html?' + res[index]._id + '">' +
+                        '<div class="card" style="box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.2), 0 13px 24px -11px rgba(156, 39, 176, 0.6);">' +
+
+                        '<div class="view overlay"><img src="http://localhost:8080/images/' + res[index].image + '" class="card-img-top card-image" alt=""></div>' +
+
+                        '<div class="card-body text-center">' +
+
+                        '<a href="#" class="grey-text"><h5>' + res[index].hosteltype + '</h5></a>' +
+
+                        '<h5><strong><a href="" class="dark-grey-text">' + res[index].hostelname + '</a></strong></h5>' +
+
+                        '<div class="hostel-footer p-2"> <span class="float-left font-weight-bold"> <strong>' + res[index].address + '</strong></span></div>' +
+                        '</div>' +
+
+                        '</div>' +
+                        '</a>' +
+
+                        '</div>'
+
+                    );
+
+                });
+
+            });
+            //View Boys Hostel SCriptend
+
+            //View Girls Hostel SCript
+            $.getJSON('http://localhost:8080/getgirls', function (res) {
+
+                $.each(res, function (index) {
+                    $('#girls_hostel').append(
+
+                        '<div class="col-lg-3 col-md-6 mb-4">' +
+                        '<a href="hosteldetail.html?' + res[index]._id + '">' +
+                        '<div class="card" style="box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.2), 0 13px 24px -11px rgba(156, 39, 176, 0.6);">' +
+
+                        '<div class="view overlay"><img src="http://localhost:8080/images/' + res[index].image + '" class="card-img-top card-image" alt=""></div>' +
+
+                        '<div class="card-body text-center">' +
+
+                        '<a href="#" class="grey-text"><h5>' + res[index].hosteltype + '</h5></a>' +
+
+                        '<h5><strong><a href="" class="dark-grey-text">' + res[index].hostelname + '</a></strong></h5>' +
+
+                        '<div class="hostel-footer p-2"> <span class="float-left font-weight-bold"> <strong>' + res[index].address + '</strong></span></div>' +
+                        '</div>' +
+
+                        '</div>' +
+                        '</a>' +
+
+                        '</div>'
+
+                    );
+
+                });
+
+            });
+			
+            //View Girls Hostel SCriptend
+        });  
+    </script>
+
+</head>
+
+<body>
+    <header>
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+            <div class="container">
+                <a class="navbar-brand" href="homepage.html">
+                    <strong>Hostel Booking Management System</strong>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent-7" aria-controls="navbarSupportedContent-7"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent-7">
+                    
+                    <ul class="navbar-nav ml-auto">
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-default"
+                                aria-labelledby="navbarDropdownMenuLink-333">
+                                <a href="profile.html" style="width: 10rem;">
+                                    <option value="" class="text-center">Profile</option>
+                                </a>
+                                <a href="#" id="logout" style="width: 10rem;">
+                                    <option value="" class="text-center">Logout</option>
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+        <!-- Navbar -->
+
+        <div class="view"
+            style="background-image: url('../../img/boyshostel1.jpg'); background-repeat: no-repeat; background-size: cover;">
+
+            <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
+
+                <div class="text-center white-text mx-5 wow fadeIn">
+                    <h1 class="mb-4">
+                        <strong>Hostel Booking Management System</strong>
+                    </h1>
+
+                    <p>
+                        <strong><h3>HOSTEL by BED</h3>
+                            <h4>"better than a hostel, cheaper than a hotel"</h4></strong>
+                    </p>
+
+                    <p class="mb-4 d-none d-md-block">
+                        <strong>We met here real friends. Everytime since 5 years it is like coming home. Good Feeling is not a hostel - It is a lifestyle!</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </header>
+    <div class="container">
+
+        <!--Content-->
+
+        <!--Modal cascading tabs-->
+        <div class="modal-c-tabs">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs md-tabs tabs-3 mt-3" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active items-hostel" data-toggle="tab" href="#panelall"" role=" tab">
+                        <i class="fas fa-home"></i>
+                        Hostels</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link items-hostel" data-toggle="tab" href="#panelboys" role="tab"><i
+                            class="fas fa-male mr-1"></i>
+                        Boys Hostels</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link items-hostel" data-toggle="tab" href="#panelgirls" role="tab"><i
+                            class="fas fa-female"></i>
+                        Girls Hostels</a>
+                </li>
+            </ul>
+
+            <!-- Tab panels -->
+            <div class="tab-content">
+                <!--Panel 7-->
+                <div class="tab-pane fade in show active" id="panelall" role="tabpanel">
+
+                    <section class="text-center mb-4 p-4">
+                        <!-- View Hostel -->
+                        <div class="row wow fadeIn" id="view_hostels">
+
+                        </div>
+                        <!-- View Hostel End -->
+
+                    </section>
+                    <!--Section: Products v.3-->
+                </div>
+                <!--/.Panel 7-->
+
+
+                <!--Panel 8-->
+                <div class="tab-pane fade" id="panelboys" role="tabpanel">
+                    <section class="text-center mb-4 p-4">
+                        <!-- View Hostel -->
+                        <div class="row wow fadeIn" id="boys_hostel">
+
+                        </div>
+                        <!-- View Hostel End -->
+                    </section>
+                    <!--Section: Products v.3-->
+                </div>
+                <!--/.Panel 8-->
+
+                <!--Panel 8-->
+                <div class="tab-pane fade" id="panelgirls" role="tabpanel">
+
+                    <section class="text-center mb-4 p-4">
+
+                        <!-- view Girls Hostel -->
+                        <div class="row wow fadeIn" id="girls_hostel">
+
+                        </div>
+                        <!-- View Girls Hostel End -->
+
+                    </section>
+                    <!--Section: Products v.3-->
+                </div>
+                <!--/.Panel 8-->
+            </div>
+
+        </div>
+    </div>
+    <!--/.Content-->
+
+    </div>
+
+    <footer class="page-footer text-center font-small mt-4 wow fadeIn">
+        <!-- Social icons -->
+        <div class="p-2 footer-social">
+            <a href="" target="_blank">
+                <i class="fab fa-facebook-f mr-3"></i>
+            </a>
+
+            <a href=" target=" _blank">
+                <i class="fab fa-twitter mr-3"></i>
+            </a>
+
+            <a href="" target="_blank">
+                <i class="fab fa-instagram mr-3"></i>
+            </a>
+
+        </div>
+        <!-- Social icons -->
+
+        <!--Copyright-->
+        <div class=" py-3 footer-copy">
+            © 2020 Copyright: All Rights Reserved DarpanN
+            <a href="https://mdbootstrap.com/education/bootstrap/" target="_blank"> Hostel Booking Management System </a>
+        </div>
+        <!--/.Copyright-->
+
+    </footer>
+    <!--/.Footer-->
+    <script type="text/javascript" src="../../js/jquery-3.4.0.min.js"></script>
+
+    <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="../../js/mdb.min.js"></script>
+</body>
+
+</html>
