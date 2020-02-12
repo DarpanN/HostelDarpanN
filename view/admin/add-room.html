@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Hostel Booking Management System</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/mdb.min.css" rel="stylesheet">
+  <link href="css/style.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+
+      var tok = localStorage.getItem('token');
+
+      $.ajax({
+        type: 'get',
+        url: 'http://localhost:8080/users',
+        beforeSend: function (xhr) {
+          if (tok) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + tok);
+          }
+        },
+        success: function (data) {
+          $('#stage').append('<p>' + data.fullname + '</p>');
+        },
+        error: function () {
+          alert("Sorry, please login your id.");
+          location.href = "../../index.html";
+        }
+      });
+
+
+      // For logging out
+      $("#logout").click(function () {
+        $.ajax({
+          type: 'post',
+          url: 'http://localhost:8080/users/logout',
+          beforeSend: function (xhr) {
+            if (tok) {
+              xhr.setRequestHeader('Authorization', 'Bearer ' + tok);
+            }
+          },
+          success: function (data) {
+            alert("You are logged out.");
+            location.href = "../../index.html";
+          },
+          error: function () {
+            alert("Sorry, You are not logged in !.");
+            location.href = "../../index.html";
+          }
+        });
+      })
+
+
+
+      // For logging out end
+
+      //Getting hostel id for adding room
+      var link = document.location.href;
+      var value = link.split('?')[1];
+      console.log(value)
+      $.getJSON('http://localhost:8080/edithostel/' + value, function (res) {
+
+        $.each(res, function (index) {
+          $('#hostelId').val(res[index]._id)
+          $('#hostelname').val(res[index].hostelname)
+        });
+
+      });
+
+      //Getting Hostel id for adding room end
+
+
+
+      //Add Room
+      $('#add_room').click(function () {
+
+        var roomtype = $("#roomtype").val();
+        var bed = $("#bed").val();
+        var price = $("#price").val();
+        var hostelId = $("#hostelId").val();
+        var hostelname = $("#hostelname").val();
+
+        if (roomtype == "") {
+          alert('Enter roomtype')
+          $("#roomtype").focus();
+        }
+        else if (!roomtype.match("^[a-zA-Z ]+$")) {
+          alert('Enter valid roomtype')
+          $("#roomtype").focus();
+        }
+        else if (bed == "") {
+          alert('Enter bed')
+          $("#bed").focus();
+        }
+
+        else if (!bed.match("[0-9]")) {
+          alert('Enter valid bed')
+          $("#bed").focus();
+        }
+        else if (price == "") {
+          alert('Enter price')
+          $("#price").focus();
+        }
+        else if (!price.match("[0-9]")) {
+          alert('Enter valid price')
+          $("#price").focus();
+        }
+        else {
+
+          data = {
+            'roomtype': roomtype,
+            'bed': bed,
+            'price': price,
+            'hostelId': hostelId,
+            'hostelname': hostelname
+          }
+          console.log(data);
+
+          $.ajax({
+            url: 'http://localhost:8080/add_hostel_room',
+            type: 'post',
+            dataType: 'json',
+            data: data,
+            success: function (res, textStatus, xhr) {
+              if (res.msg == "room_saved") {
+                alert("Room added !")
+              }
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+              console.log(xhr);
+              alert(errorThrown);
+            }
+          });
+        }
+      });
+
+	  
+      //Add Room End
+
+
+    });  
+  </script>
+
+</head>
+
+<body class="grey lighten-3">
+  <header>
+
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+      <div class="container-fluid">
+
+        <a class="navbar-brand waves-effect">
+          <strong class="color-primary">Hostel Booking Management System</strong> / Add Room
+        </a>
+
+        <div>
+          <strong class="color-primary" id="stage"></strong>
+        </div>
+
+
+
+      </div>
+    </nav>
+    <div class="sidebar-fixed position-fixed">
+
+      <a href="dashboard.html" class="logo-wrapper waves-effect">
+        <img src="img/logohostel.png" class="logo" alt="">
+      </a>
+
+      <div class="list-group list-group-flush">
+        <a href="dashboard.html" class="list-group-item active waves-effect purple">
+          <i class="fas fa-chart-pie mr-3 "></i>Dashboard
+        </a>
+        <a href="view-hostel.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-home mr-3"></i>View Hostel</a>
+        <a href="view-room.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-bed mr-3"></i>View Room</a>
+        <a href="enquiry.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="far fa-comment-alt mr-3"></i>Enquiry</a>
+        <a href="#" class="list-group-item list-group-item-action waves-effect" id="logout">
+          <i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="pt-5 mx-lg-5 main">
+
+
+    <!-- nav bar -->
+    <section class="content mt-5">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <a href="view-hostel.html">
+              <div class="small-box order waves-effect">
+                <div class="inner">
+                  <p><b>Hostel</b></p>
+                </div>
+                <i class="fas fa-home mr-3 fa-3x"></i>
+              </div>
+            </a>
+  
+          </div>
+
+
+          <!-- ./col -->
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <a href="view-room.html">
+              <div class="small-box rate waves-effect">
+                <div class="inner">
+                  
+                  <p><b>Room</b></p>
+                </div>
+                <i class="fas fa-bed mr-3 fa-3x"></i>
+              </div>
+            </a>
+  
+          </div>
+
+
+          <!-- ./col -->
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <a href="enquiry.html">
+              <div class="small-box user waves-effect">
+                <div class="inner">
+  
+                  <p><b>Enquiry</b></p>
+                </div>
+                <i class="far fa-comment-alt mr-3 fa-3x"></i>
+              </div>
+            </a>
+  
+          </div>
+
+          
+          <!-- ./col -->
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <a href="view-room.html">
+              <div class="small-box visitor waves-effect">
+                <div class="inner">
+                 
+  
+                  <p><b>Logout</b></p>
+                </div>
+                <i class="fas fa-sign-out-alt mr-3 fa-3x"></i>
+              </div>
+            </a>
+  
+          </div>
+          <!-- ./col -->
+  
+        </div>
+  
+      </section>
+    <!-- nav bar end -->
+
+
+    <div class="container-fluid container-signup">
+      <div class="col-sm-8 signup-form card">
+        <div class="login-head">
+          <h4 class="modal-title">Add Room</h4>
+        </div>
+
+
+        <div class="modal-body mx-3">
+          <input type="hidden" name="hostelname" id="hostelname">
+          <div class="md-form mb-5">
+            <input type="hidden" id="hostelId" name="hostelId" class="form-control validate custom">
+          </div>
+          <div class="md-form mb-5">
+            <i class="fas fa-home prefix grey-text"></i>
+            <input type="text" id="roomtype" name="roomtype" class="form-control validate custom"
+              pattern="[A-Z a-z a-z A-Z]+">
+            <label data-error="wrong" data-success="right" for="defaultForm-name">Room
+              Type</label>
+          </div>
+          <div class="md-form mb-5">
+            <i class="fas fa-venus-mars prefix grey-text"></i>
+
+            <input type="number" id="bed" name="bed" class="form-control validate">
+            <label data-error="wrong" data-success="right" for="defaultForm-email">Bed
+            </label>
+          </div>
+          <div class="md-form mb-5">
+
+            <i class="fas fa-envelope prefix grey-text"></i>
+            <input type="number" id="price" name="price" class="form-control validate">
+            <label data-error="wrong" data-success="right" for="defaultForm-phone">Price</label>
+          </div>
+
+
+          <div class="modal-footer d-flex justify-content-center">
+            <button class="btn btn-login" id="add_room">Add Room</button>
+          </div>
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </main>
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/mdb.min.js"></script>
+
+</body>
+
+</html>
