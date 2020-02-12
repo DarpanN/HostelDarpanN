@@ -1,0 +1,553 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Hostel-Details</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="../../css/mdb.min.css" rel="stylesheet">
+
+    <link href="../../css/style.css" rel="stylesheet">
+    <style type="text/css">
+        html,
+        body,
+        header,
+        .carousel {
+            height: 60vh;
+        }
+
+        @media (max-width: 740px) {
+
+            html,
+            body,
+            header,
+            .carousel {
+                height: 100vh;
+            }
+        }
+
+        @media (min-width: 800px) and (max-width: 850px) {
+
+            html,
+            body,
+            header,
+            .carousel {
+                height: 100vh;
+            }
+        }
+
+        @media (min-width: 800px) and (max-width: 850px) {
+            .navbar:not(.top-nav-collapse) {
+                background: #929FBA !important;
+            }
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var tok = localStorage.getItem('token');
+            /// Dashboard creation
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:8080/users',
+                beforeSend: function (xhr) {
+                    if (tok) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + tok);
+                    }
+                },
+                success: function (data) {
+                    $('#stage').append('<p>' + data.fullname + '</p>');
+                    $('#mname').append('<input type="text" id="fullname" value="' + data.fullname + '" class="form-control validate">');
+                    $('#name').append('<input type="text" id="fullname" value="' + data.fullname + '" class="form-control validate">');
+                    $('#memail').append('<input type="text" id="email" value="' + data.email + '" class="form-control validate">');
+                    $('#mphone').append('<input type="text" id="phone" value="' + data.phone + '" class="form-control validate">');
+                },
+                error: function () {
+                    alert("Sorry, please login your id.");
+                    location.href = "../../index.html";
+
+                }
+            });
+
+            // For Logging Out
+
+            $("#logout").click(function () {
+                $.ajax({
+                    type: 'post',
+                    url: 'http://localhost:8080/users/logout',
+                    beforeSend: function (xhr) {
+                        if (tok) {
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + tok);
+                        }
+                    },
+                    success: function (data) {
+                        alert("You are logged out.");
+                        location.href = "../../index.html";
+                    },
+                    error: function () {
+                        alert("Sorry,not logged in !.");
+                        location.href = "../../index.html";
+                    }
+                });
+            })
+			
+            //Logout End
+
+            //Getting Hostel Data
+            var link = document.location.href;
+            var value = link.split('?')[1];
+            console.log(value)
+            $.getJSON('http://localhost:8080/edithostel/' + value, function (res) {
+
+                $.each(res, function (index) {
+                    $('#id').val(res[index]._id)
+                    $('#hostelId').val(res[index]._id)
+                    $('#hostelname').val(res[index].hostelname)
+                    $('#hostelnamee').val(res[index].hostelname)
+                    $('#hosteltype').val(res[index].hosteltype)
+                    $('#email').val(res[index].email)
+                    $('#address').val(res[index].address)
+                    $('#phone').val(res[index].phone)
+                    $('#description').val(res[index].description)
+                });
+            });
+            //Getting Hostel Data End
+
+            //Edit Hostel
+            var link = document.location.href;
+            var value = link.split('?')[1];
+            console.log(value)
+            $.getJSON('http://localhost:8080/edithostel/' + value, function (res) {
+
+                $.each(res, function (index) {
+                    $('#hosteldetail').append(
+
+                        '<div class="view overlay"><img src="http://localhost:8080/images/' + res[index].image + '" class="card-img-top" alt="" style="height: 800px;"></div>' +
+
+                        '<div class="card-body  ">' +
+
+                        '<a href="#" class="grey-text"><h5>' + res[index].hosteltype + '</h5></a>' +
+
+                        '<div><h5><strong><a href="#" class="dark-grey-text">' + res[index].hostelname + '</a></strong></h5></div>' +
+
+                        '<hr>' +
+
+                        '<div class="text-justify"><h4> <strong>Contact:</strong></h4><p><b>Email: </b> ' + res[index].email + '</p><p><b>Phone: </b>' + res[index].phone + '</p></div>' +
+
+                        '<hr>' +
+
+                        '<div class="text-justify"><h4> <strong>Address:</strong></h4><p>' + res[index].address + '</p></div>' +
+
+                        '<hr>' +
+
+                        '<div class="text-justify"><h4> <strong>Description:</strong></h4><p>' + res[index].description + '</p></div>' +
+                        '</div>'
+                    );
+                });
+            });
+            //Edit Hostel End
+
+
+            //Send Message
+            $('#send_message').click(function () {
+
+                var fullname = $("#fullname").val();
+                var email = $("#email").val();
+                var phone = $("#phone").val();
+                var hostelname = $("#hostelname").val();
+                var message = $("#message").val();
+                data = {
+                    'fullname': fullname,
+                    'email': email,
+                    'phone': phone,
+                    'hostelname': hostelname,
+                    'message': message
+                }
+                console.log(data);
+
+                $.ajax({
+                    url: 'http://localhost:8080/send_user_message',
+                    type: 'post',
+                    dataType: 'json',
+                    data: data,
+                    success: function (res, textStatus, xhr) {
+                        if (res.msg == "message_sent") {
+                            alert("Message Sent !")
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(xhr);
+                        alert(errorThrown);
+                    }
+                });
+            });
+            //Send message End
+
+            //Get Room
+            var link = document.location.href;
+            var value = link.split('?')[1];
+            console.log(value)
+            $.getJSON('http://localhost:8080/get_room/' + value, function (res) {
+
+                $.each(res, function (index) {
+                    $('#view_rooms').append(
+
+                        '<tr>' +
+                        '<td>' + res[index].roomtype + '</td>' +
+                        '<td>' + res[index].bed + '</td>' +
+                        '<td>' + res[index].price + '</td>' +
+                        '</tr>'
+                    );
+                });
+
+            });
+			
+            //Get Room End
+
+            //User-Review
+            $('#add_review').click(function () {
+
+                var fullname = $("#fullname").val();
+                var review = $("#review").val();
+                var ratting = $("#ratting").val();
+                var hostelname = $("#hostelname").val();
+                var hostelId = $("#hostelId").val();
+                data = {
+                    'fullname': fullname,
+                    'review': review,
+                    'ratting': ratting,
+                    'hostelname': hostelname,
+                    'hostelId': hostelId
+                }
+                console.log(data);
+
+                $.ajax({
+                    url: 'http://localhost:8080/user_review',
+                    type: 'post',
+                    dataType: 'json',
+                    data: data,
+                    success: function (res, textStatus, xhr) {
+                        if (res.msg == "review_sent") {
+                            alert("Review Sent !")
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(xhr);
+                        alert(errorThrown);
+                    }
+                });
+            });
+            //User Review End
+
+            //Get User Review
+            var link = document.location.href;
+            var value = link.split('?')[1];
+            console.log(value)
+            $.getJSON('http://localhost:8080/get_review/' + value, function (res) {
+
+                $.each(res, function (index) {
+                    $('#user_review').append(
+
+                        '<div class="card user-review-div">'+
+                            '<div>'+
+                                '<h5 class="review-fullname">' + res[index].fullname + '</h5>'+
+                            '</div>'+
+                            '<div>'+
+                                '<h5 class="review-fullname">Ratting: ' + res[index].ratting + '/5</h5>'+
+                            '</div>'+
+                            '<div>'+
+                                '<p>' + res[index].review + '</p>'+
+                            '</div>'+
+                        '</div>'
+
+                        // '<tr>' +
+                        // '<td>' + res[index].fullname + '</td>' +
+                        // '<td>' + res[index].ratting + '/5</td>' +
+                        // '<td>' + res[index].review + '</td>' +
+                        // '</tr>'
+                    );
+                });
+
+            });
+			
+            //Get User Review End
+        });  
+    </script>
+
+</head>
+
+<body>
+    <header>
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+            <div class="container">
+                <a class="navbar-brand" href="homepage.html">
+                    <strong>Hostel Booking Management System</strong>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent-7" aria-controls="navbarSupportedContent-7"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent-7">
+
+                    <ul class="navbar-nav ml-auto">
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-default"
+                                aria-labelledby="navbarDropdownMenuLink-333">
+                                <a href="profile.html">
+                                    <option value="">Profile</option>
+                                </a>
+
+                                <a href="#" id="logout">
+                                    <option value="">logout</option>
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+        <!-- Navbar -->
+
+        <div class="view"
+            style="background-image: url('../../img/girls1.jpg'); background-repeat: no-repeat; background-size: cover;">
+
+            <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
+
+                <div class="text-center white-text mx-5 wow fadeIn">
+                    <h1 class="mb-4">
+                        <strong>Hostel Booking Management System</strong>
+                    </h1>
+
+                    <p>
+                        <strong>Healthy Food</strong>
+                    </p>
+
+                    <p class="mb-4 d-none d-md-block">
+                        <strong>We met here real friends. Everytime since 5 years it is like coming home. Good Feeling is not a hostel - It is a lifestyle!</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </header>
+
+    <div class="container">
+        <!--Content-->
+        <section class="text-center mb-4 p-4">
+
+            <!--Grid row-->
+            <div class="row wow fadeIn">
+
+                <!--Grid column-->
+                <div class="col-lg-3 col-md-6 mb-4">
+
+                    <!--Card-->
+                    <div class="card hostel-detail">
+                        <!-- Hostel Details Start -->
+                        <div id="hosteldetail">
+
+                        </div>
+                        <!-- Hostel Details end -->
+                        <hr>
+
+                        <div id="roomdetail">
+
+                        </div>
+
+                        <div class="text-justify p-3" id="roomtype">
+                            <table class="table table-hover">
+                                <thead class="blue lighten-4">
+                                    <tr>
+                                        <th>Room Type</th>
+                                        <th>Available Bed</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="view_rooms">
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <hr>
+
+                        <div class="modal fade" id="modalContactForm" tabindex="-1" role="dialog"
+                            aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header text-center">
+                                        <h4 class="modal-title w-100 font-weight-bold">Write to us</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body mx-3">
+                                        <div class="md-form mb-5" id="mname">
+                                            <label data-error="wrong" data-success="right" for="mname">Your
+                                                name</label>
+                                        </div>
+
+                                        <div class="md-form mb-5" id="memail">
+                                            <label data-error="wrong" data-success="right" for="memail">Your
+                                                email</label>
+                                        </div>
+
+                                        <div class="md-form mb-5" id="mphone">
+                                            <label data-error="wrong" data-success="right" for="memail">phone
+                                            </label>
+                                        </div>
+
+                                        <div class="md-form mb-5">
+                                            <input type="text" id="hostelnamee" class="form-control validate">
+                                            <label data-error="wrong" data-success="right" for="memail">Hostel
+                                                Name</label>
+                                        </div>
+
+                                        <div class="md-form">
+
+                                            <textarea type="text" id="message" class="md-textarea form-control"
+                                                rows="4"></textarea>
+                                            <label data-error="wrong" data-success="right" for="message">Your
+                                                message</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer d-flex justify-content-center">
+                                        <button class="btn btn-purple" id="send_message">Send</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <a href="" class="btn btn-purple btn-rounded mb-4" data-toggle="modal"
+                                data-target="#modalContactForm">Make Enquiry</a>
+                        </div>
+
+
+                    </div>
+
+                    <!-- User Review -->
+                    <div class="card p-4 text-justify user-review">
+                        <h4 class="text-center">
+                            <strong>
+                                Review
+                            </strong>
+                        </h4>
+                        <input type="hidden" name="hostelId" id="hostelId">
+                        <input type="hidden" name="hostelname" id="hostelname">
+                        <!-- Users Review -->
+                        <div class="md-form mb-5" id="name">
+                            <label data-error="wrong" data-success="right" for="mname">Your
+                                name</label>
+                        </div>
+                        <!-- Users Review End -->
+
+                        <div class="md-form">
+                            <i class="fas fa-pencil-alt prefix grey-text"></i>
+                            <textarea id="review" class="md-textarea form-control" rows="3"></textarea>
+                            <label for="description">Review</label>
+                        </div>
+
+                        <select class="mdb-select md-form ratting-select card" id="ratting">
+                            <option class="choose" value="" disabled selected>Choose your ratting</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <script>
+                            $(document).ready(function () {
+                                $('.mdb-select').materialSelect();
+                            });
+                        </script>
+
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button class="btn btn-login" id="add_review">Submit</button>
+                        </div>
+
+
+                        <div class="user-reviews" id="user_review">
+                           
+
+                        </div>
+
+                    </div>
+                    <!-- User Review End -->
+
+                </div>
+                <!--Card-->
+
+
+
+
+            </div>
+            <!--Grid column-->
+    </div>
+
+    </section>
+    <!--Section: Products v.3-->
+    </div>
+    <!--/.Content-->
+
+
+    </div>
+
+
+    <footer class="page-footer text-center font-small mt-4 wow fadeIn">
+        <!-- Social icons -->
+        <div class="p-2 footer-social">
+            <a href="" target="_blank">
+                <i class="fab fa-facebook-f mr-3"></i>
+            </a>
+
+            <a href=" target=" _blank">
+                <i class="fab fa-twitter mr-3"></i>
+            </a>
+
+            <a href="" target="_blank">
+                <i class="fab fa-instagram mr-3"></i>
+            </a>
+
+        </div>
+        <!-- Social icons -->
+
+        <!--Copyright-->
+        <div class=" py-3 footer-copy">
+            © 2020 Copyright: All Rights Reserved DarpanN
+            <a href="https://mdbootstrap.com/education/bootstrap/" target="_blank"> Hostel Booking Management System </a>
+        </div>
+        <!--/.Copyright-->
+
+    </footer>
+    <!--/.Footer-->
+
+
+
+    <script type="text/javascript" src="../../js/jquery-3.4.0.min.js"></script>
+
+    <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="../../js/mdb.min.js"></script>
+</body>
+
+</html>
