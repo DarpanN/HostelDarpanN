@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Hostel Booking Management System</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/mdb.min.css" rel="stylesheet">
+  <link href="css/style.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+
+      var tok = localStorage.getItem('token');
+
+      $.ajax({
+        type: 'get',
+        url: 'http://localhost:8080/users',
+        beforeSend: function (xhr) {
+          if (tok) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + tok);
+          }
+        },
+        success: function (data) {
+          $('#stage').append('<p>' + data.fullname + '</p>');
+        },
+        error: function () {
+          alert("Sorry, please login your id.");
+          location.href = "../../index.html";
+        }
+      });
+
+      // For Logging Out
+
+      $("#logout").click(function () {
+        $.ajax({
+          type: 'post',
+          url: 'http://localhost:8080/users/logout',
+          beforeSend: function (xhr) {
+            if (tok) {
+              xhr.setRequestHeader('Authorization', 'Bearer ' + tok);
+            }
+          },
+          success: function (data) {
+            alert("You are logged out.");
+            location.href = "../../index.html";
+          },
+          error: function () {
+            alert("Sorry, You are not logged in !.");
+            location.href = "../../index.html";
+          }
+        });
+      })
+	  
+      // Logout End
+
+      //View Room SCript
+      $.getJSON('http://localhost:8080/viewrooms', function (res) {
+
+        $.each(res, function (index) {
+          $('#view_rooms').append(
+            // '<table class="table table-hover">' +
+            // '<thead class="blue lighten-4">' +
+            // '<tr>' +
+            // '<th>Room Id</th>' +
+            // '<th>Hostel Name</th>' +
+            // '<th>Room Type</th>' +
+            // '<th>Bed</th>' +
+            // '<th>Price</th>' +
+            // '<th>Edit</th>' +
+            // '<th>Delete</th>' +
+            // '</tr>' +
+            // '</thead>' +
+            // '<tbody>' +
+            '<tr>' +
+            '<td>' + res[index].hostelname + '</td>' +
+            '<td>' + res[index].roomtype + '</td>' +
+            '<td>' + res[index].bed + '</td>' +
+            '<td>' + res[index].price + '</td>' +
+            '<td><a href="edit-room.html?' + res[index]._id + '"><button type="button" class="btn btn-outline-green btn-sm m-0 waves-effect">Edit</button></a></td>' +
+            '<td><button type="button" class="btn btn-outline-red btn-sm m-0 waves-effect" id="deleteroom" value="' + res[index]._id + '">Delete</button></td>' +
+            '</tr>'
+          // '</tbody>' +
+
+          //   '</table>'
+          );
+
+        });
+
+      });
+      //View Room SCriptend
+      
+
+      // Delete Hostel Script
+      $('#view_rooms').on('click', '#deleteroom', function () {
+        id = $(this).val();
+        $.ajax({
+          url: 'http://localhost:8080/delete_hostel_room/' + id,
+          type: 'DELETE',
+          dataType: 'json',
+          data: id,
+          success: function (data, textStatus, xhr) {
+            location.reload();
+            if (res.msg == "room_delete") {
+              alert("Room Deleted !")
+              
+            }
+          },
+          error: function (xhr, textStatus, errorThrown) {
+            console.log('Error in Operation');
+          }
+        });
+      });
+      // Delete Hostel Script End
+
+
+
+    });  
+  </script>
+</head>
+
+<body class="grey lighten-3">
+  <header>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+      <div class="container-fluid">
+
+        <a class="navbar-brand waves-effect">
+          <strong class="color-primary">Hostel Booking Management System</strong> / View Rooms
+        </a>
+
+        <div>
+          <strong class="color-primary" id="stage"></strong>
+        </div>
+
+
+      </div>
+    </nav>
+
+    <div class="sidebar-fixed position-fixed">
+
+      <a href="dashboard.html" class="logo-wrapper waves-effect">
+        <img src="img/logohostel.png" class="logo" alt="">
+      </a>
+      <div class="list-group list-group-flush">
+        <a href="dashboard.html" class="list-group-item active waves-effect purple">
+          <i class="fas fa-chart-pie mr-3 "></i>Dashboard
+        </a>
+        <a href="view-hostel.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-home mr-3"></i>View Hostel</a>
+        <a href="view-room.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-bed mr-3"></i>View Room</a>
+        <a href="enquiry.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="far fa-comment-alt mr-3"></i>Enquiry</a>
+        <a href="#" class="list-group-item list-group-item-action waves-effect" id="logout">
+          <i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main class="pt-5 mx-lg-5 main">
+
+    <!-- nav bar -->
+    <section class="content mt-5">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <a href="view-hostel.html">
+              <div class="small-box order waves-effect">
+                <div class="inner">
+                  <p><b>Hostel</b></p>
+                </div>
+                <i class="fas fa-home mr-3 fa-3x"></i>
+              </div>
+            </a>
+  
+          </div>
+
+
+          <!-- ./col -->
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <a href="view-room.html">
+              <div class="small-box rate waves-effect">
+                <div class="inner">
+                  
+                  <p><b>Room</b></p>
+                </div>
+                <i class="fas fa-bed mr-3 fa-3x"></i>
+              </div>
+            </a>
+  
+          </div>
+
+
+          <!-- ./col -->
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <a href="enquiry.html">
+              <div class="small-box user waves-effect">
+                <div class="inner">
+  
+                  <p><b>Enquiry</b></p>
+                </div>
+                <i class="far fa-comment-alt mr-3 fa-3x"></i>
+              </div>
+            </a>
+  
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <a href="view-room.html">
+              <div class="small-box visitor waves-effect">
+                <div class="inner">
+                 
+  
+                  <p><b>Logout</b></p>
+                </div>
+                <i class="fas fa-sign-out-alt mr-3 fa-3x"></i>
+              </div>
+            </a>
+  
+          </div>
+          <!-- ./col -->
+  
+        </div>
+  
+      </section>
+    <!-- nav bar end -->
+
+    <div class="container-fluid container-signup">
+      <div class="col-sm-12 hostel-table card pt-3" id="vroom">
+
+        <table class="table table-hover">
+
+          <thead class="blue lighten-4">
+            <tr>
+              <th>Hostel Name</th>
+              <th>Room Type</th>
+              <th>Bed</th>
+              <th>Price</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+
+          <tbody id="view_rooms">
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/mdb.min.js"></script>
+</body>
+
+</html>
