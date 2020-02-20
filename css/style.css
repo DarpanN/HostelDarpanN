@@ -21,7 +21,7 @@ html, body, header, .view {
 }
 
 .top-nav-collapse {
-  background-color: #6C649C !important;
+  background-color: rgb(4, 6, 138) !important;
 }
 
 .navbar:not(.top-nav-collapse) {
@@ -37,7 +37,7 @@ html, body, header, .view {
 /* Login Page */
 
 .btn-white {
-  color: #02000B !important;
+  color: rgb(16, 150, 3) !important;
 }
 
 h6 {
@@ -61,8 +61,8 @@ h6 {
   padding-bottom: 20px;
   padding-left: 0px;
   margin-bottom: 15px;
-  background: linear-gradient(60deg, #ab47bc, #7b1fa2);
-  box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.2), 0 13px 24px -11px rgba(156, 39, 176, 0.6);
+  background: linear-gradient(60deg, #590ad8, #0aa149);
+  box-shadow: 0 5px 20px 0px rgba(235, 6, 6, 0.2), 0 13px 24px -11px rgba(139, 94, 10, 0.6);
 }
 
 .modal-title {
@@ -109,7 +109,7 @@ h6 {
 /* Signup Page */
 
 .signup-info {
-  background-color: #662A69 ;
+  background-color: rgb(15, 37, 233) ;
 }
 
 .signup-heading {

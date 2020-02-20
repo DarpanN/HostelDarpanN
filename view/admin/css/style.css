@@ -63,7 +63,9 @@
 
 .btn-login {
   width: 150px;
-  color: #ffffff;
+ 
+  color:yellow;
+  
   background: linear-gradient(60deg, #ca5b39, #b93613);
   box-shadow: 0 5px 20px 0px rgba(3, 22, 27, 0.2), 0 13px 24px -11px #b93613;
   border-radius: 100px;
