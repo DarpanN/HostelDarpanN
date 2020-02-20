@@ -1,3 +1,4 @@
+
 .sidebar-fixed {
   height: 100vh;
   width: 270px;
@@ -66,8 +67,8 @@
  
   color:yellow;
   
-  background: linear-gradient(60deg, #ca5b39, #b93613);
-  box-shadow: 0 5px 20px 0px rgba(3, 22, 27, 0.2), 0 13px 24px -11px #b93613;
+  background: linear-gradient(60deg, #290885, #0dc525);
+  box-shadow: 0 5px 20px 0px rgba(24, 11, 141, 0.2), 0 13px 24px -11px #13b92f;
   border-radius: 100px;
 }
 
@@ -75,7 +76,7 @@
   widows: 200px;
   color: #ffffff;
   background: linear-gradient(60deg, #61051c, #7b1fa2);
-  box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.2), 0 13px 24px -11px rgba(221, 86, 8, 0.6);
+  box-shadow: 0 5px 20px 0px rgba(23, 10, 143, 0.2), 0 13px 24px -11px rgba(12, 182, 6, 0.6);
   border-radius: 100px;
 }
 
@@ -95,6 +96,7 @@
 }
 
 /* end login page */
+
 
 /* signup page */
 

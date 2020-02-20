@@ -62,7 +62,7 @@ h6 {
   padding-left: 0px;
   margin-bottom: 15px;
   background: linear-gradient(60deg, #590ad8, #0aa149);
-  box-shadow: 0 5px 20px 0px rgba(235, 6, 6, 0.2), 0 13px 24px -11px rgba(139, 94, 10, 0.6);
+  box-shadow: 0 5px 20px 0px rgba(167, 48, 67, 0.2), 0 13px 24px -11px rgba(26, 3, 128, 0.6);
 }
 
 .modal-title {
@@ -76,7 +76,7 @@ h6 {
 .btn-login {
   width: 150px;
   color: #ffffff;
-  background: linear-gradient(60deg, #ff5722, #b93613);
+  background: linear-gradient(60deg, #ff5722, #4513b9);
   box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.2), 0 13px 24px -11px #b93613;
   border-radius: 100px;
 }
